@@ -82,6 +82,7 @@ public class WechatPay2Credentials implements Credentials {
       // 如“{"filename":" filea.jpg ","sha256":" hjkahkjsjkfsjk78687dhjahdajhk "}”
       // 这里加入自定义签名body，用于替换该签名body
       body = signBody[0].getValue();
+      request.removeHeaders("Sign-Body");
     } else if (request instanceof HttpEntityEnclosingRequestBase) {
       // PATCH,POST,PUT
       body = EntityUtils.toString(((HttpEntityEnclosingRequestBase) request).getEntity());
