@@ -4,6 +4,8 @@ import com.wechat.pay.contrib.apache.httpclient.Credentials;
 import java.io.IOException;
 import java.net.URI;
 import java.security.SecureRandom;
+
+import org.apache.http.Header;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
@@ -74,8 +76,14 @@ public class WechatPay2Credentials implements Credentials {
     }
 
     String body = "";
-    // PATCH,POST,PUT
-    if (request instanceof HttpEntityEnclosingRequestBase) {
+    Header[] signBody = request.getHeaders("Sign-Body");
+    if (signBody != null) {
+      // 在图片上传API、视频上传API中，签名的body不能简单取Entity，而是指定了签名的body，
+      // 如“{"filename":" filea.jpg ","sha256":" hjkahkjsjkfsjk78687dhjahdajhk "}”
+      // 这里加入自定义签名body，用于替换该签名body
+      body = signBody[0].getValue();
+    } else if (request instanceof HttpEntityEnclosingRequestBase) {
+      // PATCH,POST,PUT
       body = EntityUtils.toString(((HttpEntityEnclosingRequestBase) request).getEntity());
     }
 
