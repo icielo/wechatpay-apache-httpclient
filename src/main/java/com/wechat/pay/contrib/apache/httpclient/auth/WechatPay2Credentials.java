@@ -77,7 +77,7 @@ public class WechatPay2Credentials implements Credentials {
 
     String body = "";
     Header[] signBody = request.getHeaders("Sign-Body");
-    if (signBody != null) {
+    if (signBody.length != 0) {
       // 在图片上传API、视频上传API中，签名的body不能简单取Entity，而是指定了签名的body，
       // 如“{"filename":" filea.jpg ","sha256":" hjkahkjsjkfsjk78687dhjahdajhk "}”
       // 这里加入自定义签名body，用于替换该签名body
