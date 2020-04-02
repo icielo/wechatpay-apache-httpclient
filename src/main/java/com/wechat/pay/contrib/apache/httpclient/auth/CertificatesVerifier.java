@@ -1,5 +1,7 @@
 package com.wechat.pay.contrib.apache.httpclient.auth;
 
+import com.wechat.pay.contrib.apache.httpclient.WechatpayConfig;
+
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
