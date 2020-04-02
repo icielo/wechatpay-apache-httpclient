@@ -6,6 +6,12 @@ import com.wechat.pay.contrib.apache.httpclient.Credentials;
 import com.wechat.pay.contrib.apache.httpclient.WechatPayHttpClientBuilder;
 import com.wechat.pay.contrib.apache.httpclient.util.AesUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.PemUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -17,19 +23,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 在原有CertificatesVerifier基础上，增加自动更新证书功能
  */
+@Slf4j
 public class AutoUpdateCertificatesVerifier implements Verifier {
-
-  private static final Logger log = LoggerFactory.getLogger(AutoUpdateCertificatesVerifier.class);
 
   //证书下载地址
   private static final String CertDownloadPath = "https://api.mch.weixin.qq.com/v3/certificates";
