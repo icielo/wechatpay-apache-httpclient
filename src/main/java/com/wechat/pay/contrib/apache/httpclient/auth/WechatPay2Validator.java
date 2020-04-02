@@ -12,41 +12,41 @@ import java.io.IOException;
 @Slf4j
 public class WechatPay2Validator implements Validator {
 
-  private Verifier verifier;
+    private Verifier verifier;
 
-  public WechatPay2Validator(Verifier verifier) {
-    this.verifier = verifier;
-  }
-
-  @Override
-  public final boolean validate(CloseableHttpResponse response) throws IOException {
-    Header serialNo = response.getFirstHeader("Wechatpay-Serial");
-    Header sign = response.getFirstHeader("Wechatpay-Signature");
-    Header timestamp = response.getFirstHeader("Wechatpay-TimeStamp");
-    Header nonce = response.getFirstHeader("Wechatpay-Nonce");
-
-    // todo: check timestamp
-    if (timestamp == null || nonce == null || serialNo == null || sign == null) {
-      return false;
+    public WechatPay2Validator(Verifier verifier) {
+        this.verifier = verifier;
     }
 
-    String message = buildMessage(response);
-    return verifier.verify(serialNo.getValue(), message.getBytes("utf-8"), sign.getValue());
-  }
+    @Override
+    public final boolean validate(CloseableHttpResponse response) throws IOException {
+        Header serialNo = response.getFirstHeader("Wechatpay-Serial");
+        Header sign = response.getFirstHeader("Wechatpay-Signature");
+        Header timestamp = response.getFirstHeader("Wechatpay-TimeStamp");
+        Header nonce = response.getFirstHeader("Wechatpay-Nonce");
 
-  protected final String buildMessage(CloseableHttpResponse response) throws IOException {
-    String timestamp = response.getFirstHeader("Wechatpay-TimeStamp").getValue();
-    String nonce = response.getFirstHeader("Wechatpay-Nonce").getValue();
+        // todo: check timestamp
+        if (timestamp == null || nonce == null || serialNo == null || sign == null) {
+            return false;
+        }
 
-    String body = getResponseBody(response);
-    return timestamp + "\n"
-          + nonce + "\n"
-          + body + "\n";
-  }
+        String message = buildMessage(response);
+        return verifier.verify(serialNo.getValue(), message.getBytes("utf-8"), sign.getValue());
+    }
 
-  protected final String getResponseBody(CloseableHttpResponse response) throws IOException {
-    HttpEntity entity = response.getEntity();
+    protected final String buildMessage(CloseableHttpResponse response) throws IOException {
+        String timestamp = response.getFirstHeader("Wechatpay-TimeStamp").getValue();
+        String nonce = response.getFirstHeader("Wechatpay-Nonce").getValue();
 
-    return (entity != null && entity.isRepeatable()) ? EntityUtils.toString(entity) : "";
-  }
+        String body = getResponseBody(response);
+        return timestamp + "\n"
+                + nonce + "\n"
+                + body + "\n";
+    }
+
+    protected final String getResponseBody(CloseableHttpResponse response) throws IOException {
+        HttpEntity entity = response.getEntity();
+
+        return (entity != null && entity.isRepeatable()) ? EntityUtils.toString(entity) : "";
+    }
 }
