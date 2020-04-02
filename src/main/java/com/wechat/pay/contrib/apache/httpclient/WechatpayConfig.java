@@ -64,7 +64,11 @@ public class WechatpayConfig {
             WechatpayConfig.MERCHANT_CERT_ID = properties.getProperty("merchant.cert.id");
             WechatpayConfig.MERCHANT_CERT_ID_OLD = properties.getProperty("merchant.cert.id.old");
             WechatpayConfig.PRIVATE_KEY = PemUtil.loadPrivateKey(new FileInputStream(path + File.separator + "apiclient_key.pem"));
-            WechatpayConfig.CERTIFICATE = PemUtil.loadCertificate(new FileInputStream(path + File.separator + "certificate.pem"));
+            String certPath = path + File.separator + "certificate.pem";
+            File file = new File(certPath);
+            if (file.exists()) {
+                WechatpayConfig.CERTIFICATE = PemUtil.loadCertificate(new FileInputStream(file));
+            }
         } catch (Exception e) {
             log.error("微信支付加载错误！", e);
         } finally {
