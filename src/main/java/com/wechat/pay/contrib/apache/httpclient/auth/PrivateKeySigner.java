@@ -1,10 +1,6 @@
 package com.wechat.pay.contrib.apache.httpclient.auth;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
 import java.util.Base64;
 
 public class PrivateKeySigner implements Signer {

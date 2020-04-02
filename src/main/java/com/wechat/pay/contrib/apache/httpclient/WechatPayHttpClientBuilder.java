@@ -4,14 +4,13 @@ import com.wechat.pay.contrib.apache.httpclient.auth.CertificatesVerifier;
 import com.wechat.pay.contrib.apache.httpclient.auth.PrivateKeySigner;
 import com.wechat.pay.contrib.apache.httpclient.auth.WechatPay2Credentials;
 import com.wechat.pay.contrib.apache.httpclient.auth.WechatPay2Validator;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.execchain.ClientExecChain;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.List;
-
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.execchain.ClientExecChain;
 
 public class WechatPayHttpClientBuilder extends HttpClientBuilder {
     private Credentials credentials;
