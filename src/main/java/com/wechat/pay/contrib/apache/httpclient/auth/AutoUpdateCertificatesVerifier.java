@@ -182,10 +182,10 @@ public class AutoUpdateCertificatesVerifier implements Verifier {
 
                 String serialNumber = x509Cert.getSerialNumber().toString();
                 // 检测到新证书，更新配置。业务程序定时检测，更新到配置文件或数据库存储
-                if (WechatpayConfig.CERTIFICATE == null || serialNumber.equals(WechatpayConfig.MERCHANT_CERT_ID)
-                        && serialNumber.equals(WechatpayConfig.MERCHANT_CERT_ID_OLD)) {
-                    WechatpayConfig.MERCHANT_CERT_ID_OLD = WechatpayConfig.MERCHANT_CERT_ID;
-                    WechatpayConfig.MERCHANT_CERT_ID = serialNumber;
+                if (WechatpayConfig.CERTIFICATE == null || serialNumber.equals(WechatpayConfig.CERTIFICATE_ID)
+                        && serialNumber.equals(WechatpayConfig.CERTIFICATE_ID_OLD)) {
+                    WechatpayConfig.CERTIFICATE_ID_OLD = WechatpayConfig.CERTIFICATE_ID;
+                    WechatpayConfig.CERTIFICATE_ID = serialNumber;
                     WechatpayConfig.CERTIFICATE_PEM = cert;
                     WechatpayConfig.CERTIFICATE = x509Cert;
                 }
