@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 合单查询订单
+ * 返回参数：合单查询订单
  *
  * @author Administrator
  */

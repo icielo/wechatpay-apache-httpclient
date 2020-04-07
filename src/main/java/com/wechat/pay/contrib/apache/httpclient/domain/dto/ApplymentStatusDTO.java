@@ -3,7 +3,7 @@ package com.wechat.pay.contrib.apache.httpclient.domain.dto;
 import lombok.Data;
 
 /**
- * 二级商户进件申请状态
+ * 返回参数：二级商户进件申请状态
  *
  * @author lincl
  */

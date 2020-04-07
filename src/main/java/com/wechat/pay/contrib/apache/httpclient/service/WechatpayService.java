@@ -114,7 +114,16 @@ public interface WechatpayService {
 
     /**
      * 合单关闭订单
+     *
      * @param combineTradeCloseDTO
      */
     void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) throws IOException;
+
+    /**
+     * 完结分账
+     *
+     * @param profitSharingFinishDTO
+     * @return
+     */
+    ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) throws IOException;
 }

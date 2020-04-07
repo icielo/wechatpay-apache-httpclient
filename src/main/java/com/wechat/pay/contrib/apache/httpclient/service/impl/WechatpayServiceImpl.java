@@ -107,4 +107,10 @@ public class WechatpayServiceImpl implements WechatpayService {
     public void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) throws IOException {
         wechatpayClient.doPost(WechatpayAPI.COMBINE_TRADE_CLOSE, combineTradeCloseDTO);
     }
+
+    @Override
+    public ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) throws IOException {
+        String json = wechatpayClient.doPost(WechatpayAPI.PROFIT_SHARING_FINISH, profitSharingFinishDTO);
+        return JsonUtil.fromSnakeJson(json, ProfitSharingFinishResultDTO.class);
+    }
 }
