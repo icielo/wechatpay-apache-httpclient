@@ -94,4 +94,12 @@ public class WechatpayServiceImpl implements WechatpayService {
     public String combineTradeApp(CombineTradeDTO combineTradeDTO) throws IOException {
         return wechatpayClient.doPost(WechatpayAPI.COMBINE_TRADE_APP, combineTradeDTO);
     }
+
+    @Override
+    public CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo) throws IOException, URISyntaxException {
+        Map<String, Object> params = new HashMap<>(16);
+        params.put("combineOutTradeNo", combineOutTradeNo);
+        String json = wechatpayClient.doGet(WechatpayAPI.COMBINE_TRADE_QUERY, params);
+        return JsonUtil.fromSnakeJson(json, CombineTradeStatusDTO.class);
+    }
 }

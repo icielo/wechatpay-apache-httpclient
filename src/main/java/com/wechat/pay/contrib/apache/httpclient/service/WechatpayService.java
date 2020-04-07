@@ -27,12 +27,13 @@ public interface WechatpayService {
 
     /**
      * 通知回调解密
+     *
      * @param associatedData
      * @param nonce
      * @param ciphertext
      * @return
      */
-    String decrypt(String associatedData, String nonce, String ciphertext ) throws IOException, GeneralSecurityException;
+    String decrypt(String associatedData, String nonce, String ciphertext) throws IOException, GeneralSecurityException;
 
     /**
      * 图片上传
@@ -102,4 +103,11 @@ public interface WechatpayService {
      */
     String combineTradeApp(CombineTradeDTO combineTradeDTO) throws IOException;
 
+    /**
+     * 合单查询订单
+     *
+     * @param combineOutTradeNo
+     * @return
+     */
+    CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo) throws IOException, URISyntaxException;
 }
