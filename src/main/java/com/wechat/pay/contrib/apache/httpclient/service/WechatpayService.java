@@ -1,5 +1,6 @@
 package com.wechat.pay.contrib.apache.httpclient.service;
 
+import com.wechat.pay.contrib.apache.httpclient.domain.dto.CombineTradeCloseDTO;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,4 +111,10 @@ public interface WechatpayService {
      * @return
      */
     CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo) throws IOException, URISyntaxException;
+
+    /**
+     * 合单关闭订单
+     * @param combineTradeCloseDTO
+     */
+    void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) throws IOException;
 }

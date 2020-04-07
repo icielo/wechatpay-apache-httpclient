@@ -102,4 +102,9 @@ public class WechatpayServiceImpl implements WechatpayService {
         String json = wechatpayClient.doGet(WechatpayAPI.COMBINE_TRADE_QUERY, params);
         return JsonUtil.fromSnakeJson(json, CombineTradeStatusDTO.class);
     }
+
+    @Override
+    public void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) throws IOException {
+        wechatpayClient.doPost(WechatpayAPI.COMBINE_TRADE_CLOSE, combineTradeCloseDTO);
+    }
 }
