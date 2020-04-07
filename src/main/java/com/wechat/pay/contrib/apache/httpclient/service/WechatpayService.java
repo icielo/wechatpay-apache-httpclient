@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 
 /**
  * 微信支付服务类
@@ -23,6 +24,15 @@ public interface WechatpayService {
      * @throws UnsupportedEncodingException
      */
     boolean verify(HttpServletRequest request) throws UnsupportedEncodingException;
+
+    /**
+     * 通知回调解密
+     * @param associatedData
+     * @param nonce
+     * @param ciphertext
+     * @return
+     */
+    String decrypt(String associatedData, String nonce, String ciphertext ) throws IOException, GeneralSecurityException;
 
     /**
      * 图片上传

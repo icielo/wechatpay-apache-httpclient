@@ -3,9 +3,11 @@ package com.wechat.pay.contrib.apache.httpclient.service.impl;
 
 import com.wechat.pay.contrib.apache.httpclient.WechatpayAPI;
 import com.wechat.pay.contrib.apache.httpclient.WechatpayClient;
+import com.wechat.pay.contrib.apache.httpclient.WechatpayConfig;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.*;
 import com.wechat.pay.contrib.apache.httpclient.exception.WechatpayException;
 import com.wechat.pay.contrib.apache.httpclient.service.WechatpayService;
+import com.wechat.pay.contrib.apache.httpclient.util.AesUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +39,12 @@ public class WechatpayServiceImpl implements WechatpayService {
     @Override
     public boolean verify(HttpServletRequest request) throws UnsupportedEncodingException {
         return wechatpayClient.verify(request);
+    }
+
+    @Override
+    public String decrypt(String associatedData, String nonce, String ciphertext) throws IOException, GeneralSecurityException {
+        AesUtil aesUtil = new AesUtil(WechatpayConfig.API_V3_KEY.getBytes("utf-8"));
+        return aesUtil.decryptToString(associatedData.getBytes("utf-8"), nonce.getBytes("utf-8"), ciphertext);
     }
 
     @Override
