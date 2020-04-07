@@ -2,6 +2,7 @@ package com.wechat.pay.contrib.apache.httpclient.auth;
 
 /**
  * 签名验证
+ *
  * @author lincl
  */
 public interface Verifier {
