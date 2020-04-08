@@ -15,7 +15,7 @@ public class NoticePayAmountDTO {
      * 子单金额，单位为分。
      * 示例值：100
      */
-    private String totalAmount;
+    private Long totalAmount;
     /**
      * 标价币种
      * 必填：是
@@ -29,7 +29,7 @@ public class NoticePayAmountDTO {
      * 订单现金支付金额。
      * 示例值：10
      */
-    private String payerAmount;
+    private Long payerAmount;
     /**
      * 现金支付币种
      * 必填：是

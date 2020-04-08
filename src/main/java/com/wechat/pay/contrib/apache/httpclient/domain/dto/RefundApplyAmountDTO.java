@@ -1,10 +1,13 @@
 package com.wechat.pay.contrib.apache.httpclient.domain.dto;
 
+import lombok.Data;
+
 /**
  * 退款申请金额
  *
  * @author lincl
  */
+@Data
 public class RefundApplyAmountDTO {
     /**
      * 退款金额

@@ -29,7 +29,7 @@ public class AccountValidationDTO {
      * 需要汇款的金额(单位：分)。
      * 示例值：124
      */
-    private String payAmount;
+    private Long payAmount;
     /**
      * 收款卡号
      * 必填：否
