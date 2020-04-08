@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 驳回原因详情
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class AuditDetailDTO {

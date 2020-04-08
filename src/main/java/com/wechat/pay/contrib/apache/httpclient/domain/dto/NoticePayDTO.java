@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 支付成功通知参数
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class NoticePayDTO {

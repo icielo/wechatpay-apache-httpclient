@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 通知资源数据
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class NoticeResourceDTO {

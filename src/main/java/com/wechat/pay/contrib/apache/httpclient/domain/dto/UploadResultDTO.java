@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 返回参数：上传结果
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class UploadResultDTO {

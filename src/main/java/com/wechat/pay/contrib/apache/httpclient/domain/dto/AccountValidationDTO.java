@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 汇款账户验证信息
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class AccountValidationDTO {

@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 通知响应对象
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class NoticeResponse {

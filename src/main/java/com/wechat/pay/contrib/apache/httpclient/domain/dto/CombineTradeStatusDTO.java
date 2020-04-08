@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 返回参数：合单查询订单
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class CombineTradeStatusDTO {

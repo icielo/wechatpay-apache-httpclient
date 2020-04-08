@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Administrator
+ * @author lincl
  */
 public class WechatpayClientTest {
 

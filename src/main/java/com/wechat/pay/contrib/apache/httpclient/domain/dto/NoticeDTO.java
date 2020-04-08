@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 支付通知对象
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class NoticeDTO {

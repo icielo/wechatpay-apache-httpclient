@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 支付场景信息描述
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class SceneInfoDTO {

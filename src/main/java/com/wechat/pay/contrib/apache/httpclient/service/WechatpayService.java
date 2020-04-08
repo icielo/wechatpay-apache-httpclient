@@ -126,4 +126,13 @@ public interface WechatpayService {
      * @return
      */
     ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) throws IOException;
+
+
+    /**
+     * 退款申请
+     *
+     * @param refundApplyDTO
+     * @return
+     */
+    RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO) throws IOException;
 }

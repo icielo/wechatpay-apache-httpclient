@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 合单关闭订单
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class CombineTradeCloseDTO {

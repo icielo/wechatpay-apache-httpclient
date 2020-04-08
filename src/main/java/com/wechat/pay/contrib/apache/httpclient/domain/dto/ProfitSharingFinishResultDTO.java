@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 返回参数：完结分账结果
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class ProfitSharingFinishResultDTO {

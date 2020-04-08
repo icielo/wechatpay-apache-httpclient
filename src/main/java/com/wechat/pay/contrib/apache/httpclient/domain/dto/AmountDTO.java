@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 订单金额信息
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class AmountDTO {

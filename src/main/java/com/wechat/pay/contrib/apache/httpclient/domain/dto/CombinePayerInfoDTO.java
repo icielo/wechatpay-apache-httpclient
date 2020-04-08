@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 支付者信息
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class CombinePayerInfoDTO {

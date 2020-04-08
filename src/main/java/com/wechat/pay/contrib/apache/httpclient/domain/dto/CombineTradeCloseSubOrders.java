@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 合单关闭订单-子单信息
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class CombineTradeCloseSubOrders {

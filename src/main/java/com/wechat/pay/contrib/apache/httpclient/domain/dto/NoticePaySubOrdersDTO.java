@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 子单信息
  *
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class NoticePaySubOrdersDTO {

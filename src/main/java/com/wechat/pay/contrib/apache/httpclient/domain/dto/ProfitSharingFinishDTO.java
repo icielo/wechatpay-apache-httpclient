@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * 完结分账
- * @author Administrator
+ * @author lincl
  */
 @Data
 public class ProfitSharingFinishDTO {

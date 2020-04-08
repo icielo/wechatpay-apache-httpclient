@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 微信支付服务类
  *
- * @author Administrator
+ * @author lincl
  */
 public class WechatpayServiceImpl implements WechatpayService {
 
@@ -112,5 +112,11 @@ public class WechatpayServiceImpl implements WechatpayService {
     public ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) throws IOException {
         String json = wechatpayClient.doPost(WechatpayAPI.PROFIT_SHARING_FINISH, profitSharingFinishDTO);
         return JsonUtil.fromSnakeJson(json, ProfitSharingFinishResultDTO.class);
+    }
+
+    @Override
+    public RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO) throws IOException {
+        String json = wechatpayClient.doPost(WechatpayAPI.REFUND_APPLY, refundApplyDTO);
+        return JsonUtil.fromSnakeJson(json, RefundApplyResultDTO.class);
     }
 }
