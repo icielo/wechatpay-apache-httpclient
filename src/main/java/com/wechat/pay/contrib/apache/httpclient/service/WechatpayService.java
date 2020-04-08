@@ -52,7 +52,7 @@ public interface WechatpayService {
      * @return
      * @throws IOException
      */
-    ApplymentResultDTO applyment(ApplymentDTO applymentDTO) throws IOException;
+    ApplymentResultDTO applyment(ApplymentDTO applymentDTO);
 
     /**
      * 通过申请单ID查询申请状态
@@ -64,7 +64,7 @@ public interface WechatpayService {
      * @throws IOException
      * @throws URISyntaxException
      */
-    ApplymentStatusDTO applymentStatusQueryByApplymentId(String applymentId) throws IOException, URISyntaxException;
+    ApplymentStatusDTO applymentStatusQueryByApplymentId(String applymentId);
 
     /**
      * 通过业务申请编号查询申请状态
@@ -77,7 +77,7 @@ public interface WechatpayService {
      * @throws IOException
      * @throws URISyntaxException
      */
-    ApplymentStatusDTO applymentStatusQueryByOutRequestNo(String outRequestNo) throws IOException, URISyntaxException;
+    ApplymentStatusDTO applymentStatusQueryByOutRequestNo(String outRequestNo);
 
     /**
      * 修改结算帐号
@@ -86,7 +86,7 @@ public interface WechatpayService {
      * @return
      * @throws IOException
      */
-    String settlementModify(SettlementModifyDTO settlementModifyDTO) throws IOException;
+    String settlementModify(SettlementModifyDTO settlementModifyDTO);
 
     /**
      * 查询结算账户
@@ -94,7 +94,7 @@ public interface WechatpayService {
      * @param subMchid 特约商户号
      * @return
      */
-    SettlementDTO settlementQuery(String subMchid) throws IOException, URISyntaxException;
+    SettlementDTO settlementQuery(String subMchid);
 
     /**
      * 合单下单-APP支付API
@@ -102,7 +102,7 @@ public interface WechatpayService {
      * @param combineTradeDTO
      * @return
      */
-    String combineTradeApp(CombineTradeDTO combineTradeDTO) throws IOException;
+    String combineTradeApp(CombineTradeDTO combineTradeDTO);
 
     /**
      * 合单查询订单
@@ -110,14 +110,14 @@ public interface WechatpayService {
      * @param combineOutTradeNo
      * @return
      */
-    CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo) throws IOException, URISyntaxException;
+    CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo);
 
     /**
      * 合单关闭订单
      *
      * @param combineTradeCloseDTO
      */
-    void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) throws IOException;
+    void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO);
 
     /**
      * 完结分账
@@ -125,7 +125,7 @@ public interface WechatpayService {
      * @param profitSharingFinishDTO
      * @return
      */
-    ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) throws IOException;
+    ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO);
 
 
     /**
@@ -134,5 +134,5 @@ public interface WechatpayService {
      * @param refundApplyDTO
      * @return
      */
-    RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO) throws IOException;
+    RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO);
 }

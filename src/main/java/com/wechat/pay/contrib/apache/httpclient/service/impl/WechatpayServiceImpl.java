@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,13 +55,13 @@ public class WechatpayServiceImpl implements WechatpayService {
     }
 
     @Override
-    public ApplymentResultDTO applyment(ApplymentDTO applymentDTO) throws IOException {
+    public ApplymentResultDTO applyment(ApplymentDTO applymentDTO) {
         String json = wechatpayClient.doPost(WechatpayAPI.APPLYMENT, applymentDTO);
         return JsonUtil.fromSnakeJson(json, ApplymentResultDTO.class);
     }
 
     @Override
-    public ApplymentStatusDTO applymentStatusQueryByApplymentId(String applymentId) throws IOException, URISyntaxException {
+    public ApplymentStatusDTO applymentStatusQueryByApplymentId(String applymentId) {
         Map<String, Object> params = new HashMap<>(16);
         params.put("applymentId", applymentId);
         String json = wechatpayClient.doGet(WechatpayAPI.APPLYMENT_STATUS_QUERY_BY_APPLYMENT_ID, params);
@@ -70,7 +69,7 @@ public class WechatpayServiceImpl implements WechatpayService {
     }
 
     @Override
-    public ApplymentStatusDTO applymentStatusQueryByOutRequestNo(String outRequestNo) throws IOException, URISyntaxException {
+    public ApplymentStatusDTO applymentStatusQueryByOutRequestNo(String outRequestNo) {
         Map<String, Object> params = new HashMap<>(16);
         params.put("outRequestNo", outRequestNo);
         String json = wechatpayClient.doGet(WechatpayAPI.APPLYMENT_STATUS_QUERY_BY_OUT_REQUEST_NO, params);
@@ -78,12 +77,12 @@ public class WechatpayServiceImpl implements WechatpayService {
     }
 
     @Override
-    public String settlementModify(SettlementModifyDTO settlementModifyDTO) throws IOException {
+    public String settlementModify(SettlementModifyDTO settlementModifyDTO) {
         return wechatpayClient.doPost(WechatpayAPI.SETTLEMENT_MODIFY, settlementModifyDTO);
     }
 
     @Override
-    public SettlementDTO settlementQuery(String subMchid) throws IOException, URISyntaxException {
+    public SettlementDTO settlementQuery(String subMchid) {
         Map<String, Object> params = new HashMap<>(16);
         params.put("subMchid", subMchid);
         String json = wechatpayClient.doGet(WechatpayAPI.SETTLEMENT_QUERY, params);
@@ -91,12 +90,12 @@ public class WechatpayServiceImpl implements WechatpayService {
     }
 
     @Override
-    public String combineTradeApp(CombineTradeDTO combineTradeDTO) throws IOException {
+    public String combineTradeApp(CombineTradeDTO combineTradeDTO) {
         return wechatpayClient.doPost(WechatpayAPI.COMBINE_TRADE_APP, combineTradeDTO);
     }
 
     @Override
-    public CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo) throws IOException, URISyntaxException {
+    public CombineTradeStatusDTO combineTradeQuery(String combineOutTradeNo) {
         Map<String, Object> params = new HashMap<>(16);
         params.put("combineOutTradeNo", combineOutTradeNo);
         String json = wechatpayClient.doGet(WechatpayAPI.COMBINE_TRADE_QUERY, params);
@@ -104,18 +103,18 @@ public class WechatpayServiceImpl implements WechatpayService {
     }
 
     @Override
-    public void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) throws IOException {
+    public void combineTradeClose(CombineTradeCloseDTO combineTradeCloseDTO) {
         wechatpayClient.doPost(WechatpayAPI.COMBINE_TRADE_CLOSE, combineTradeCloseDTO);
     }
 
     @Override
-    public ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) throws IOException {
+    public ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO) {
         String json = wechatpayClient.doPost(WechatpayAPI.PROFIT_SHARING_FINISH, profitSharingFinishDTO);
         return JsonUtil.fromSnakeJson(json, ProfitSharingFinishResultDTO.class);
     }
 
     @Override
-    public RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO) throws IOException {
+    public RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO) {
         String json = wechatpayClient.doPost(WechatpayAPI.REFUND_APPLY, refundApplyDTO);
         return JsonUtil.fromSnakeJson(json, RefundApplyResultDTO.class);
     }

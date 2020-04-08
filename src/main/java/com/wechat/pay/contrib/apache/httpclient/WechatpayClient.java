@@ -27,10 +27,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -88,27 +85,32 @@ public class WechatpayClient {
      * @param params
      * @return
      */
-    public String doGet(WechatpayAPI wechatpayAPI, Map<String, Object> params) throws URISyntaxException, IOException {
-        if (!HttpMethod.GET.equals(wechatpayAPI.getHttpMethod())) {
-            throw new WechatpayException(wechatpayAPI.getName() + "API请使用doPost方法请求");
-        }
-        // 创建请求
-        String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
-        URIBuilder uriBuilder = new URIBuilder(url);
-        // 设置请求参数
-        if (params != null) {
-            Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, Object> item = it.next();
-                if (item.getValue() != null) {
-                    uriBuilder.setParameter(item.getKey(), item.getValue().toString());
+    public String doGet(WechatpayAPI wechatpayAPI, Map<String, Object> params) {
+        try {
+            if (!HttpMethod.GET.equals(wechatpayAPI.getHttpMethod())) {
+                throw new WechatpayException(wechatpayAPI.getName() + "API请使用doPost方法请求");
+            }
+            // 创建请求
+            String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
+            URIBuilder uriBuilder = new URIBuilder(url);
+            // 设置请求参数
+            if (params != null) {
+                Iterator<Map.Entry<String, Object>> it = params.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, Object> item = it.next();
+                    if (item.getValue() != null) {
+                        uriBuilder.setParameter(item.getKey(), item.getValue().toString());
+                    }
                 }
             }
+            HttpGet httpGet = new HttpGet(uriBuilder.build());
+            httpGet.addHeader("Accept", "application/json");
+            // 请求
+            return this.execute(httpGet);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new WechatpayException(wechatpayAPI.getName() + "API请求报错");
         }
-        HttpGet httpGet = new HttpGet(uriBuilder.build());
-        httpGet.addHeader("Accept", "application/json");
-        // 请求
-        return this.execute(httpGet);
     }
 
     /**
@@ -118,7 +120,7 @@ public class WechatpayClient {
      * @param params，对象或map
      * @return
      */
-    public String doPost(WechatpayAPI wechatpayAPI, Object params) throws IOException {
+    public String doPost(WechatpayAPI wechatpayAPI, Object params) {
         // 创建请求
         String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
         HttpPost httpPost = new HttpPost(url);
@@ -185,10 +187,11 @@ public class WechatpayClient {
      * @return
      * @throws IOException
      */
-    public String execute(HttpUriRequest httpUriRequest) throws IOException {
-        CloseableHttpResponse response = httpClient.execute(httpUriRequest);
+    public String execute(HttpUriRequest httpUriRequest) {
+        CloseableHttpResponse response = null;
         String content = null;
         try {
+            response = httpClient.execute(httpUriRequest);
             int statusCode = response.getStatusLine().getStatusCode();
             HttpEntity entity = response.getEntity();
             content = EntityUtils.toString(entity);
@@ -199,8 +202,16 @@ public class WechatpayClient {
             } else {
                 log.error("请求错误！返回结果：" + content);
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         } finally {
-            response.close();
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+
+                }
+            }
         }
         return content;
     }
