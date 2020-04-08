@@ -127,7 +127,6 @@ public interface WechatpayService {
      */
     ProfitSharingFinishResultDTO profitSharingFinish(ProfitSharingFinishDTO profitSharingFinishDTO);
 
-
     /**
      * 退款申请
      *
@@ -135,4 +134,26 @@ public interface WechatpayService {
      * @return
      */
     RefundApplyResultDTO refundApply(RefundApplyDTO refundApplyDTO);
+
+    /**
+     * 通过微信支付退款单号查询退款
+     *
+     * @param refundId 退款单的主键，唯一定义此资源的标识。
+     *                 示例值： 50000000382019052709732678859
+     * @param subMchid 微信支付分配给二级商户的商户号。
+     *                 示例值：1900000109
+     * @return
+     */
+    RefundQueryResultDTO refundQueryByRefundId(String refundId, String subMchid);
+
+    /**
+     * 通过商户退款单号查询退款
+     *
+     * @param outRefundNo 商户系统内部的退款单号，商户系统内部唯一，同一退款单号多次请求只退一笔。
+     *                    示例值： 1217752501201407033233368018
+     * @param subMchid    微信支付分配给二级商户的商户号。
+     *                    示例值：1900000109
+     * @return
+     */
+    RefundQueryResultDTO refundQueryByOutRefundNo(String outRefundNo, String subMchid);
 }

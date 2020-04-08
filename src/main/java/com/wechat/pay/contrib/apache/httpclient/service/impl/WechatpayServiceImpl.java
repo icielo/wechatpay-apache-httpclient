@@ -118,4 +118,22 @@ public class WechatpayServiceImpl implements WechatpayService {
         String json = wechatpayClient.doPost(WechatpayAPI.REFUND_APPLY, refundApplyDTO);
         return JsonUtil.fromSnakeJson(json, RefundApplyResultDTO.class);
     }
+
+    @Override
+    public RefundQueryResultDTO refundQueryByRefundId(String refundId, String subMchid) {
+        Map<String, Object> params = new HashMap<>(16);
+        params.put("refundId", refundId);
+        params.put("subMchid", subMchid);
+        String json = wechatpayClient.doGet(WechatpayAPI.REFUND_QUERY_BY_REFUND_ID, params);
+        return JsonUtil.fromSnakeJson(json, RefundQueryResultDTO.class);
+    }
+
+    @Override
+    public RefundQueryResultDTO refundQueryByOutRefundNo(String outRefundNo, String subMchid) {
+        Map<String, Object> params = new HashMap<>(16);
+        params.put("outRefundNo", outRefundNo);
+        params.put("subMchid", subMchid);
+        String json = wechatpayClient.doGet(WechatpayAPI.REFUND_QUERY_BY_OUT_REFUND_NO, params);
+        return JsonUtil.fromSnakeJson(json, RefundQueryResultDTO.class);
+    }
 }

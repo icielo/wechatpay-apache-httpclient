@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 退款申请结果
+ * 返回参数：退款申请结果
  * @author lincl
  */
 @Data
@@ -34,7 +34,7 @@ public class RefundApplyResultDTO {
      * -订单金额
      * 必填：是
      */
-    private RefundApplyResultAmountDTO amount;
+    private RefundAmountDTO amount;
     /**
      * +优惠退款详情
      * 必填：否

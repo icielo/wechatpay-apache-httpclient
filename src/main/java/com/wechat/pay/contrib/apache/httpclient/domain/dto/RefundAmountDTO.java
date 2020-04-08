@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Administrator
  */
 @Data
-public class RefundApplyResultAmountDTO {
+public class RefundAmountDTO {
     /**
      * 退款金额
      * 必填：是

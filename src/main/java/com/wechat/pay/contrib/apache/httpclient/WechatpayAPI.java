@@ -93,9 +93,13 @@ public enum WechatpayAPI {
      */
     REFUND_APPLY("退款申请", "/ecommerce/refunds/apply", HttpMethod.POST),
     /**
-     * 查询退款
+     * 通过微信支付退款单号查询退款
      */
-    REFUND_QUERY("查询退款", "/ecommerce/refunds/id/{refund_id}", HttpMethod.POST),
+    REFUND_QUERY_BY_REFUND_ID("通过微信支付退款单号查询退款", "/ecommerce/refunds/id/{refund_id}", HttpMethod.POST),
+    /**
+     * 通过商户退款单号查询退款
+     */
+    REFUND_QUERY_BY_OUT_REFUND_NO("通过商户退款单号查询退款", "/ecommerce/refunds/out-refund-no/{out_refund_no}", HttpMethod.POST),
     /**
      * 查询二级商户账户实时余额
      */
