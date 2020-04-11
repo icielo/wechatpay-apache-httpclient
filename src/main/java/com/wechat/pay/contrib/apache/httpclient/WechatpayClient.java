@@ -28,8 +28,10 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.URISyntaxException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
