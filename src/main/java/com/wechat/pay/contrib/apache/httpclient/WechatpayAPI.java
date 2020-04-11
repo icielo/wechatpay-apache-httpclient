@@ -11,7 +11,7 @@ public enum WechatpayAPI {
     /**
      * 二级商户进件
      */
-    APPLYMENT("二级商户进件", "/ecommerce/applyments", HttpMethod.POST),
+    APPLYMENT("二级商户进件", "/ecommerce/applyments/", HttpMethod.POST),
     /**
      * 通过申请单ID查询申请状态
      */
