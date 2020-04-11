@@ -180,7 +180,7 @@ public class AutoUpdateCertificatesVerifier implements Verifier {
                 }
                 newCertList.add(x509Cert);
 
-                String serialNumber = x509Cert.getSerialNumber().toString();
+                String serialNumber = dataNode.get(i).get("serial_no").textValue();
                 // 检测到新证书，更新配置。业务程序定时检测，更新到配置文件或数据库存储
                 if (WechatpayConfig.CERTIFICATE == null || serialNumber.equals(WechatpayConfig.CERTIFICATE_ID)
                         && serialNumber.equals(WechatpayConfig.CERTIFICATE_ID_OLD)) {

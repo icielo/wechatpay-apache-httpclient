@@ -86,6 +86,8 @@ public class WechatpayClient {
      * @return
      */
     public String doGet(WechatpayAPI wechatpayAPI, Map<String, Object> params) {
+        log.info("请求API名称：" + wechatpayAPI.getName());
+        log.info("请求API地址：" + wechatpayAPI.getUrl());
         try {
             if (!HttpMethod.GET.equals(wechatpayAPI.getHttpMethod())) {
                 throw new WechatpayException(wechatpayAPI.getName() + "API请使用doPost方法请求");
@@ -104,6 +106,7 @@ public class WechatpayClient {
                 }
             }
             HttpGet httpGet = new HttpGet(uriBuilder.build());
+            httpGet.addHeader("Content-Type", "application/json");
             httpGet.addHeader("Accept", "application/json");
             // 请求
             return this.execute(httpGet);
@@ -121,6 +124,8 @@ public class WechatpayClient {
      * @return
      */
     public String doPost(WechatpayAPI wechatpayAPI, Object params) {
+        log.info("请求API名称：" + wechatpayAPI.getName());
+        log.info("请求API地址：" + wechatpayAPI.getUrl());
         // 创建请求
         String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
         HttpPost httpPost = new HttpPost(url);
@@ -130,10 +135,13 @@ public class WechatpayClient {
                 throw new WechatpayException("post请求参数不允许定义为Map");
             }
             String json = JsonUtil.toSnakeJson(params);
+            log.info("请求参数：" + json);
             StringEntity reqEntity = new StringEntity(json, ContentType.create("application/json", "utf-8"));
             httpPost.setEntity(reqEntity);
         }
+        httpPost.addHeader("Content-Type", "application/json");
         httpPost.addHeader("Accept", "application/json");
+        httpPost.addHeader("Wechatpay-Serial",WechatpayConfig.CERTIFICATE_ID);
         // 请求
         return this.execute(httpPost);
     }
@@ -151,7 +159,9 @@ public class WechatpayClient {
         // 文件类型
         String suffix = FileUtil.getType(file);
         // SHA256
-        String sha256 = DigestUtils.sha256Hex(new FileInputStream(file));
+        FileInputStream fileInputStream = new FileInputStream(file);
+        String sha256 = DigestUtils.sha256Hex(fileInputStream);
+        fileInputStream.close();
         // 待签名body
         String meta = "{\"filename\":\"" + filename + "\",\"sha256\":\"" + sha256 + "\"}";
         // 创建请求
@@ -188,6 +198,7 @@ public class WechatpayClient {
      * @throws IOException
      */
     public String execute(HttpUriRequest httpUriRequest) {
+        log.info("实际请求地址：" + httpUriRequest.getURI().toString());
         CloseableHttpResponse response = null;
         String content = null;
         try {
