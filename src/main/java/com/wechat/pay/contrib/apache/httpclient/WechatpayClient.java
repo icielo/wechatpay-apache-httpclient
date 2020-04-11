@@ -3,6 +3,7 @@ package com.wechat.pay.contrib.apache.httpclient;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ReUtil;
 import com.wechat.pay.contrib.apache.httpclient.auth.*;
+import com.wechat.pay.contrib.apache.httpclient.domain.dto.ResponseDTO;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.UploadResultDTO;
 import com.wechat.pay.contrib.apache.httpclient.exception.WechatpayException;
 import com.wechat.pay.contrib.apache.httpclient.util.DataUtil;
@@ -141,7 +142,7 @@ public class WechatpayClient {
         }
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.addHeader("Accept", "application/json");
-        httpPost.addHeader("Wechatpay-Serial",WechatpayConfig.CERTIFICATE_ID);
+        httpPost.addHeader("Wechatpay-Serial", WechatpayConfig.CERTIFICATE_ID);
         // 请求
         return this.execute(httpPost);
     }
@@ -212,6 +213,8 @@ public class WechatpayClient {
                 EntityUtils.consume(entity);
             } else {
                 log.error("请求错误！返回结果：" + content);
+                ResponseDTO responseDTO = JsonUtil.fromSnakeJson(content, ResponseDTO.class);
+                throw new WechatpayException("请求微信支付失败！错误码：" + responseDTO.getCode() + "，错误信息：" + responseDTO.getMessage());
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
