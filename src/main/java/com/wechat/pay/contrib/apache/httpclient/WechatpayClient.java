@@ -204,6 +204,7 @@ public class WechatpayClient {
         log.info("实际请求地址：" + httpUriRequest.getURI().toString());
         CloseableHttpResponse response = null;
         String content = null;
+        ResponseDTO responseDTO = null;
         try {
             response = httpClient.execute(httpUriRequest);
             int statusCode = response.getStatusLine().getStatusCode();
@@ -215,11 +216,11 @@ public class WechatpayClient {
                 EntityUtils.consume(entity);
             } else {
                 log.error("请求错误！返回结果：" + content);
-                ResponseDTO responseDTO = JsonUtil.fromSnakeJson(content, ResponseDTO.class);
-                throw new WechatpayException("请求微信支付失败！错误码：" + responseDTO.getCode() + "，错误信息：" + responseDTO.getMessage());
+                responseDTO = JsonUtil.fromSnakeJson(content, ResponseDTO.class);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            throw new WechatpayException("请求微信支付失败！错误信息：" + e.getMessage());
         } finally {
             if (response != null) {
                 try {
@@ -228,6 +229,9 @@ public class WechatpayClient {
 
                 }
             }
+        }
+        if (responseDTO != null) {
+            throw new WechatpayException("请求微信支付失败！错误码：" + responseDTO.getCode() + "，错误信息：" + responseDTO.getMessage());
         }
         return content;
     }
