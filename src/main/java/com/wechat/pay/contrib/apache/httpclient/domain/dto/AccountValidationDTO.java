@@ -1,5 +1,7 @@
 package com.wechat.pay.contrib.apache.httpclient.domain.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.wechat.pay.contrib.apache.httpclient.serializer.DecryptDeserializer;
 import lombok.Data;
 
 /**
@@ -15,6 +17,7 @@ public class AccountValidationDTO {
      * 需商户使用该户名的账户进行汇款。
      * 示例值： rDdICA3ZYXshYqeOSslSjSMf+MhhC4oaujiISFzq3AE+as7mAEDJly+DgRuVs74msmKUH8pl+3oA==
      */
+    @JSONField(deserializeUsing = DecryptDeserializer.class)
     private String accountName;
     /**
      * 付款卡号
@@ -22,6 +25,7 @@ public class AccountValidationDTO {
      * 结算账户为对私时会返回，商户需使用该付款卡号进行汇款。
      * 示例值：9nZYDEvBT4rDdICA3ZYXshYqeOSslSjSauAE+as7mAEDJly+DgRuVs74msmKUH8pl+3oA==
      */
+    @JSONField(deserializeUsing = DecryptDeserializer.class)
     private String accountNo;
     /**
      * 汇款金额
