@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.wechat.pay.contrib.apache.httpclient.WechatpayAPI;
 import com.wechat.pay.contrib.apache.httpclient.WechatpayConfig;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.WechatpayLogDTO;
+import com.wechat.pay.contrib.apache.httpclient.enums.YesNo;
 import com.wechat.pay.contrib.apache.httpclient.service.WechatpayLogService;
 import com.wechat.pay.contrib.apache.httpclient.util.JsonUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.ThrowableUtil;
@@ -79,6 +80,7 @@ public class WechatpayLogAspect {
         wechatpayLogDTO.setResponseText(result.toString());
         wechatpayLogDTO.setRequestTime(LocalDateTime.now());
         wechatpayLogDTO.setCostTime(System.currentTimeMillis() - currentTime);
+        wechatpayLogDTO.setStatus(YesNo._1.getValue());
         wechatpayLogService.save(wechatpayLogDTO);
         return result;
     }
@@ -96,6 +98,7 @@ public class WechatpayLogAspect {
         }
         wechatpayLogDTO.setCostTime(System.currentTimeMillis() - currentTime);
         wechatpayLogDTO.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+        wechatpayLogDTO.setStatus(YesNo._0.getValue());
         wechatpayLogService.save(wechatpayLogDTO);
     }
 }

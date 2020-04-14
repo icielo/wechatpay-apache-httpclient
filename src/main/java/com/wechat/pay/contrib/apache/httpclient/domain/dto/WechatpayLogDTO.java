@@ -87,4 +87,9 @@ public class WechatpayLogDTO {
      * 异常详细
      */
     private String exceptionDetail;
+
+    /**
+     * 状态
+     */
+    private String status;
 }
