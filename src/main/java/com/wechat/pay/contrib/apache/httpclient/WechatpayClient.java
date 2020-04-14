@@ -1,16 +1,13 @@
 package com.wechat.pay.contrib.apache.httpclient;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.json.JSONUtil;
 import com.wechat.pay.contrib.apache.httpclient.annotation.Log;
 import com.wechat.pay.contrib.apache.httpclient.auth.*;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.ResponseDTO;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.UploadResultDTO;
 import com.wechat.pay.contrib.apache.httpclient.exception.WechatpayException;
-import com.wechat.pay.contrib.apache.httpclient.util.DataUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.JsonUtil;
-import com.wechat.pay.contrib.apache.httpclient.util.ReflectionUtil;
+import com.wechat.pay.contrib.apache.httpclient.util.UrlUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -28,6 +25,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -36,9 +34,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * 微信支付客户端
@@ -47,17 +43,13 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 @Data
+@Component
 public class WechatpayClient {
 
     /**
      * 请求客户端
      */
     private CloseableHttpClient httpClient;
-
-    /**
-     * path参数
-     */
-    private Pattern PATH_PATTERN = Pattern.compile("(\\{\\w+\\})");
 
     /**
      * 签名验证器
@@ -74,8 +66,6 @@ public class WechatpayClient {
         PrivateKeySigner privateKeySigner = new PrivateKeySigner(WechatpayConfig.MERCHANT_CERT_ID, WechatpayConfig.PRIVATE_KEY);
         WechatPay2Credentials wechatPay2Credentials = new WechatPay2Credentials(WechatpayConfig.MERCHANT_ID, privateKeySigner);
         verifier = new AutoUpdateCertificatesVerifier(wechatPay2Credentials, WechatpayConfig.API_V3_KEY.getBytes("utf-8"));
-
-
         // 请求客户端
         httpClient = WechatPayHttpClientBuilder.create()
                 .withMerchant(WechatpayConfig.MERCHANT_ID, WechatpayConfig.MERCHANT_CERT_ID, WechatpayConfig.PRIVATE_KEY)
@@ -90,13 +80,14 @@ public class WechatpayClient {
      * @param params
      * @return
      */
+    @Log
     public String doGet(WechatpayAPI wechatpayAPI, Map<String, Object> params) {
         try {
             if (!HttpMethod.GET.equals(wechatpayAPI.getHttpMethod())) {
                 throw new WechatpayException(wechatpayAPI.getName() + "API请使用doPost方法请求");
             }
             // 创建请求
-            String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
+            String url = UrlUtil.getRealUrl(WechatpayConfig.API_BASE_URL + wechatpayAPI.getUrl(), params);
             URIBuilder uriBuilder = new URIBuilder(url);
             // 设置请求参数
             if (params != null) {
@@ -112,11 +103,7 @@ public class WechatpayClient {
             httpGet.addHeader("Content-Type", "application/json");
             httpGet.addHeader("Accept", "application/json");
             // 请求
-            if (wechatpayAPI.isEncrypt()) {
-                // 参数需要加密
-                return this.execute(httpGet, wechatpayAPI, JSONUtil.toJsonStr(params), JsonUtil.toSnakeJson(params));
-            }
-            return this.execute(httpGet, wechatpayAPI, JSONUtil.toJsonStr(params), null);
+            return this.execute(httpGet);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new WechatpayException(wechatpayAPI.getName() + "API请求报错");
@@ -130,9 +117,10 @@ public class WechatpayClient {
      * @param params，对象或map
      * @return
      */
+    @Log
     public String doPost(WechatpayAPI wechatpayAPI, Object params) {
         // 创建请求
-        String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
+        String url = UrlUtil.getRealUrl(WechatpayConfig.API_BASE_URL + wechatpayAPI.getUrl(), params);
         String json = null;
         HttpPost httpPost = new HttpPost(url);
         // 设置请求参数
@@ -148,10 +136,7 @@ public class WechatpayClient {
         httpPost.addHeader("Accept", "application/json");
         httpPost.addHeader("Wechatpay-Serial", WechatpayConfig.CERTIFICATE_ID);
         // 请求
-        if (wechatpayAPI.isEncrypt()) {
-            return this.execute(httpPost, wechatpayAPI, JSONUtil.toJsonStr(params), json);
-        }
-        return this.execute(httpPost, wechatpayAPI, JSONUtil.toJsonStr(params), null);
+        return this.execute(httpPost);
 
     }
 
@@ -162,6 +147,7 @@ public class WechatpayClient {
      * @return
      * @throws IOException
      */
+    @Log
     public UploadResultDTO doUpload(WechatpayAPI wechatpayAPI, File file) throws IOException {
         // 文件名
         String filename = file.getName();
@@ -174,7 +160,7 @@ public class WechatpayClient {
         // 待签名body
         String meta = "{\"filename\":\"" + filename + "\",\"sha256\":\"" + sha256 + "\"}";
         // 创建请求
-        String url = this.getRealUrl(wechatpayAPI.getUrl(), null);
+        String url = UrlUtil.getRealUrl(WechatpayConfig.API_BASE_URL + wechatpayAPI.getUrl(), null);
         HttpPost httpPost = new HttpPost(url);
         httpPost.addHeader("Accept", "application/json");
         httpPost.addHeader("Content-Type", "multipart/form-data;boundary=boundary");
@@ -195,7 +181,7 @@ public class WechatpayClient {
         //放入内容
         httpPost.setEntity(multipartEntityBuilder.build());
         // 请求
-        String json = this.execute(httpPost, wechatpayAPI, null, null);
+        String json = this.execute(httpPost);
         return JsonUtil.fromSnakeJson(json, UploadResultDTO.class);
     }
 
@@ -203,17 +189,9 @@ public class WechatpayClient {
      * 执行请求
      *
      * @param httpUriRequest
-     * @param wechatpayAPI
-     * @param requestText
-     * @param requestCiphertext
      * @return
      */
-    @Log
-    public String execute(HttpUriRequest httpUriRequest, WechatpayAPI wechatpayAPI, String requestText, String requestCiphertext) {
-        log.debug("请求名称：" + wechatpayAPI.getName());
-        log.debug("请求地址：" + httpUriRequest.getURI().toString());
-        log.debug("请求报文：" + requestText);
-        log.debug("请求密文：" + requestCiphertext);
+    public String execute(HttpUriRequest httpUriRequest) {
         CloseableHttpResponse response = null;
         String content = null;
         ResponseDTO responseDTO = null;
@@ -247,35 +225,6 @@ public class WechatpayClient {
         }
         return content;
     }
-
-    /**
-     * 替换path参数为实际值
-     *
-     * @param url
-     * @param params
-     * @return
-     */
-    public String getRealUrl(String url, Object params) {
-        List<String> list = ReUtil.findAll(PATH_PATTERN, url, 1);
-        for (String item : list) {
-            String fieldName = DataUtil.toCamel(item.replace("{", "").replace("}", ""));
-            if (params == null) {
-                throw new WechatpayException("缺少请求参数：" + fieldName);
-            }
-            Object value;
-            if (params instanceof Map) {
-                value = ((Map) params).get(fieldName);
-            } else {
-                value = ReflectionUtil.getFieldValue(params, fieldName);
-            }
-            if (value == null) {
-                throw new WechatpayException("缺少请求参数：" + fieldName);
-            }
-            url = url.replace(item, value.toString());
-        }
-        return WechatpayConfig.API_BASE_URL + url;
-    }
-
 
     /**
      * 通知回调验证签名

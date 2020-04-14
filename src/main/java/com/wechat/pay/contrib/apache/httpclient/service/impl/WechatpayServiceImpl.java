@@ -9,6 +9,7 @@ import com.wechat.pay.contrib.apache.httpclient.exception.WechatpayException;
 import com.wechat.pay.contrib.apache.httpclient.service.WechatpayService;
 import com.wechat.pay.contrib.apache.httpclient.util.AesUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.JsonUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -28,12 +29,8 @@ public class WechatpayServiceImpl implements WechatpayService {
     /**
      * 微信支付客户端
      */
-    WechatpayClient wechatpayClient;
-
-    public WechatpayServiceImpl(WechatpayClient wechatpayClient) {
-        this.wechatpayClient = wechatpayClient;
-    }
-
+    @Autowired
+    private WechatpayClient wechatpayClient;
 
     @Override
     public boolean verify(HttpServletRequest request) throws UnsupportedEncodingException {

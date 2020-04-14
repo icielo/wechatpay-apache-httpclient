@@ -5,6 +5,7 @@ import com.wechat.pay.contrib.apache.httpclient.domain.dto.IdCardInfoDTO;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.SettlementModifyDTO;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.UploadResultDTO;
 import com.wechat.pay.contrib.apache.httpclient.util.JsonUtil;
+import com.wechat.pay.contrib.apache.httpclient.util.UrlUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,12 +35,12 @@ public class WechatpayClientTest {
     public void getRealUrl() {
         Map map = new HashMap();
         map.put("applymentId", "123");
-        System.out.println(wechatpayClient.getRealUrl(WechatpayAPI.APPLYMENT_STATUS_QUERY_BY_APPLYMENT_ID.getUrl(), map));
+        System.out.println(UrlUtil.getRealUrl(WechatpayAPI.APPLYMENT_STATUS_QUERY_BY_APPLYMENT_ID.getUrl(), map));
 
         SettlementModifyDTO reqVO = new SettlementModifyDTO();
         reqVO.setSubMchid("132");
 
-        System.out.println(wechatpayClient.getRealUrl(WechatpayAPI.SETTLEMENT_MODIFY.getUrl(), reqVO));
+        System.out.println(UrlUtil.getRealUrl(WechatpayAPI.SETTLEMENT_MODIFY.getUrl(), reqVO));
     }
 
     /**

@@ -1,16 +1,24 @@
 package com.wechat.pay.contrib.apache.httpclient.aspect;
 
+import cn.hutool.json.JSONUtil;
 import com.wechat.pay.contrib.apache.httpclient.WechatpayAPI;
+import com.wechat.pay.contrib.apache.httpclient.WechatpayConfig;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.WechatpayLogDTO;
 import com.wechat.pay.contrib.apache.httpclient.service.WechatpayLogService;
+import com.wechat.pay.contrib.apache.httpclient.util.JsonUtil;
 import com.wechat.pay.contrib.apache.httpclient.util.ThrowableUtil;
-import org.apache.http.client.methods.HttpUriRequest;
+import com.wechat.pay.contrib.apache.httpclient.util.UrlUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
 
@@ -19,17 +27,17 @@ import java.time.LocalDateTime;
  *
  * @author lincl
  */
+@Component
+@Aspect
+@Slf4j
 public class WechatpayLogAspect {
 
     private long currentTime;
 
-    private WechatpayLogDTO log;
+    private WechatpayLogDTO wechatpayLogDTO;
 
+    @Autowired
     private WechatpayLogService wechatpayLogService;
-
-    public WechatpayLogAspect(WechatpayLogService wechatpayLogService) {
-        this.wechatpayLogService = wechatpayLogService;
-    }
 
     /**
      * 配置切入点
@@ -47,25 +55,31 @@ public class WechatpayLogAspect {
     @Around("logPointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         currentTime = System.currentTimeMillis();
-        log = new WechatpayLogDTO();
+        wechatpayLogDTO = new WechatpayLogDTO();
         // 记录日志
         Object[] args = joinPoint.getArgs();
-        if (args.length == 4) {
-            HttpUriRequest httpUriRequest = (HttpUriRequest) args[0];
-            WechatpayAPI wechatpayAPI = (WechatpayAPI) args[1];
-            String requestText = (String) args[2];
-            String requestCiphertext = (String) args[3];
-            log.setName(wechatpayAPI.getName());
-            log.setUrl(httpUriRequest.getURI().toString());
-            log.setRequestHeader(httpUriRequest.getAllHeaders().toString());
-            log.setRequestCiphertext(requestCiphertext);
-            log.setRequestText(requestText);
+        if (args.length == 2) {
+            WechatpayAPI wechatpayAPI = (WechatpayAPI) args[0];
+            Object params = args[1];
+            String requestText = null;
+            String requestCiphertext = null;
+            if (params instanceof File) {
+
+            } else {
+                requestText = JSONUtil.toJsonStr(params);
+                requestCiphertext = JsonUtil.toSnakeJson(params);
+            }
+            wechatpayLogDTO.setName(wechatpayAPI.getName());
+            wechatpayLogDTO.setUrl(UrlUtil.getRealUrl(WechatpayConfig.API_BASE_URL + wechatpayAPI.getUrl(), params));
+            wechatpayLogDTO.setRequestHeader(null);
+            wechatpayLogDTO.setRequestCiphertext(requestCiphertext);
+            wechatpayLogDTO.setRequestText(requestText);
         }
         Object result = joinPoint.proceed();
-        log.setResponseText(result.toString());
-        log.setRequestTime(LocalDateTime.now());
-        log.setCostTime(System.currentTimeMillis() - currentTime);
-        wechatpayLogService.save(log);
+        wechatpayLogDTO.setResponseText(result.toString());
+        wechatpayLogDTO.setRequestTime(LocalDateTime.now());
+        wechatpayLogDTO.setCostTime(System.currentTimeMillis() - currentTime);
+        wechatpayLogService.save(wechatpayLogDTO);
         return result;
     }
 
@@ -77,11 +91,11 @@ public class WechatpayLogAspect {
      */
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        if (log == null) {
-            log = new WechatpayLogDTO();
+        if (wechatpayLogDTO == null) {
+            wechatpayLogDTO = new WechatpayLogDTO();
         }
-        log.setCostTime(System.currentTimeMillis() - currentTime);
-        log.setExceptionDetail(ThrowableUtil.getStackTrace(e));
-        wechatpayLogService.save(log);
+        wechatpayLogDTO.setCostTime(System.currentTimeMillis() - currentTime);
+        wechatpayLogDTO.setExceptionDetail(ThrowableUtil.getStackTrace(e));
+        wechatpayLogService.save(wechatpayLogDTO);
     }
 }
