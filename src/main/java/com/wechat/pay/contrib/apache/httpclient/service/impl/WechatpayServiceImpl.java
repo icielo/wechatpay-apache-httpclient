@@ -48,7 +48,8 @@ public class WechatpayServiceImpl implements WechatpayService {
         if (!file.exists()) {
             throw new WechatpayException("文件不存在！");
         }
-        return wechatpayClient.doUpload(WechatpayAPI.MEDIA_IMAGE_UPLOAD, file);
+        String json = wechatpayClient.doUpload(WechatpayAPI.MEDIA_IMAGE_UPLOAD, file);
+        return JsonUtil.fromSnakeJson(json, UploadResultDTO.class);
     }
 
     @Override

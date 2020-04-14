@@ -148,7 +148,7 @@ public class WechatpayClient {
      * @throws IOException
      */
     @Log
-    public UploadResultDTO doUpload(WechatpayAPI wechatpayAPI, File file) throws IOException {
+    public String doUpload(WechatpayAPI wechatpayAPI, File file) throws IOException {
         // 文件名
         String filename = file.getName();
         // 文件类型
@@ -181,8 +181,7 @@ public class WechatpayClient {
         //放入内容
         httpPost.setEntity(multipartEntityBuilder.build());
         // 请求
-        String json = this.execute(httpPost);
-        return JsonUtil.fromSnakeJson(json, UploadResultDTO.class);
+        return this.execute(httpPost);
     }
 
     /**
