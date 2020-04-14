@@ -11,7 +11,7 @@ public enum WechatpayAPI {
     /**
      * 二级商户进件
      */
-    APPLYMENT("二级商户进件", "/ecommerce/applyments/", HttpMethod.POST),
+    APPLYMENT("二级商户进件", "/ecommerce/applyments/", HttpMethod.POST, true),
     /**
      * 通过申请单ID查询申请状态
      */
@@ -161,10 +161,23 @@ public enum WechatpayAPI {
      */
     private HttpMethod httpMethod;
 
+    /**
+     * 是否加密
+     */
+    private boolean encrypt;
+
     WechatpayAPI(String name, String url, HttpMethod httpMethod) {
         this.name = name;
         this.url = url;
         this.httpMethod = httpMethod;
+        this.encrypt = false;
+    }
+
+    WechatpayAPI(String name, String url, HttpMethod httpMethod, boolean encrypt) {
+        this.name = name;
+        this.url = url;
+        this.httpMethod = httpMethod;
+        this.encrypt = encrypt;
     }
 
     public String getName() {
@@ -177,5 +190,9 @@ public enum WechatpayAPI {
 
     public HttpMethod getHttpMethod() {
         return httpMethod;
+    }
+
+    public boolean isEncrypt() {
+        return encrypt;
     }
 }

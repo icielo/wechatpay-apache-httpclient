@@ -2,6 +2,8 @@ package com.wechat.pay.contrib.apache.httpclient;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.json.JSONUtil;
+import com.wechat.pay.contrib.apache.httpclient.annotation.Log;
 import com.wechat.pay.contrib.apache.httpclient.auth.*;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.ResponseDTO;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.UploadResultDTO;
@@ -89,8 +91,6 @@ public class WechatpayClient {
      * @return
      */
     public String doGet(WechatpayAPI wechatpayAPI, Map<String, Object> params) {
-        log.info("请求API名称：" + wechatpayAPI.getName());
-        log.info("请求API地址：" + wechatpayAPI.getUrl());
         try {
             if (!HttpMethod.GET.equals(wechatpayAPI.getHttpMethod())) {
                 throw new WechatpayException(wechatpayAPI.getName() + "API请使用doPost方法请求");
@@ -112,7 +112,11 @@ public class WechatpayClient {
             httpGet.addHeader("Content-Type", "application/json");
             httpGet.addHeader("Accept", "application/json");
             // 请求
-            return this.execute(httpGet);
+            if (wechatpayAPI.isEncrypt()) {
+                // 参数需要加密
+                return this.execute(httpGet, wechatpayAPI, JSONUtil.toJsonStr(params), JsonUtil.toSnakeJson(params));
+            }
+            return this.execute(httpGet, wechatpayAPI, JSONUtil.toJsonStr(params), null);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new WechatpayException(wechatpayAPI.getName() + "API请求报错");
@@ -127,18 +131,16 @@ public class WechatpayClient {
      * @return
      */
     public String doPost(WechatpayAPI wechatpayAPI, Object params) {
-        log.info("请求API名称：" + wechatpayAPI.getName());
-        log.info("请求API地址：" + wechatpayAPI.getUrl());
         // 创建请求
         String url = this.getRealUrl(wechatpayAPI.getUrl(), params);
+        String json = null;
         HttpPost httpPost = new HttpPost(url);
         // 设置请求参数
         if (params != null) {
             if (params instanceof Map) {
                 throw new WechatpayException("post请求参数不允许定义为Map");
             }
-            String json = JsonUtil.toSnakeJson(params);
-            log.info("请求参数：" + json);
+            json = JsonUtil.toSnakeJson(params);
             StringEntity reqEntity = new StringEntity(json, ContentType.create("application/json", "utf-8"));
             httpPost.setEntity(reqEntity);
         }
@@ -146,7 +148,11 @@ public class WechatpayClient {
         httpPost.addHeader("Accept", "application/json");
         httpPost.addHeader("Wechatpay-Serial", WechatpayConfig.CERTIFICATE_ID);
         // 请求
-        return this.execute(httpPost);
+        if (wechatpayAPI.isEncrypt()) {
+            return this.execute(httpPost, wechatpayAPI, JSONUtil.toJsonStr(params), json);
+        }
+        return this.execute(httpPost, wechatpayAPI, JSONUtil.toJsonStr(params), null);
+
     }
 
     /**
@@ -189,7 +195,7 @@ public class WechatpayClient {
         //放入内容
         httpPost.setEntity(multipartEntityBuilder.build());
         // 请求
-        String json = this.execute(httpPost);
+        String json = this.execute(httpPost, wechatpayAPI, null, null);
         return JsonUtil.fromSnakeJson(json, UploadResultDTO.class);
     }
 
@@ -197,11 +203,17 @@ public class WechatpayClient {
      * 执行请求
      *
      * @param httpUriRequest
+     * @param wechatpayAPI
+     * @param requestText
+     * @param requestCiphertext
      * @return
-     * @throws IOException
      */
-    public String execute(HttpUriRequest httpUriRequest) {
-        log.info("实际请求地址：" + httpUriRequest.getURI().toString());
+    @Log
+    public String execute(HttpUriRequest httpUriRequest, WechatpayAPI wechatpayAPI, String requestText, String requestCiphertext) {
+        log.debug("请求名称：" + wechatpayAPI.getName());
+        log.debug("请求地址：" + httpUriRequest.getURI().toString());
+        log.debug("请求报文：" + requestText);
+        log.debug("请求密文：" + requestCiphertext);
         CloseableHttpResponse response = null;
         String content = null;
         ResponseDTO responseDTO = null;
