@@ -108,7 +108,7 @@ public class WechatpayClientTest {
     @Test
     public void MEDIA_UPLOAD() throws IOException {
         String fileName = "e:\\hehe.jpg";
-        UploadResultDTO result = wechatpayClient.doUpload(WechatpayAPI.MEDIA_IMAGE_UPLOAD, new File(fileName));
+        String result = wechatpayClient.doUpload(WechatpayAPI.MEDIA_IMAGE_UPLOAD, new File(fileName));
         System.out.println(result);
     }
 

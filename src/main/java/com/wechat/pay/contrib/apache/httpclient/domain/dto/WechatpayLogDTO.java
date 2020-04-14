@@ -84,6 +84,11 @@ public class WechatpayLogDTO {
     private String createBy;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 异常详细
      */
     private String exceptionDetail;
