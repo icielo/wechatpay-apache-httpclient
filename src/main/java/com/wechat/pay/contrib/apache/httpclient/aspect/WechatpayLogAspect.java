@@ -70,7 +70,7 @@ public class WechatpayLogAspect {
                 requestCiphertext = JsonUtil.toSnakeJson(params);
             }
             wechatpayLogDTO.setName(wechatpayAPI.getName());
-            wechatpayLogDTO.setUrl(UrlUtil.getRealUrl(wechatpayAPI.getUrl(), params));
+            wechatpayLogDTO.setUrl(UrlUtil.getRealUrl(WechatpayConfig.API_BASE_URL + wechatpayAPI.getUrl(), params));
             wechatpayLogDTO.setRequestHeader(null);
             wechatpayLogDTO.setRequestCiphertext(requestCiphertext);
             wechatpayLogDTO.setRequestText(requestText);
