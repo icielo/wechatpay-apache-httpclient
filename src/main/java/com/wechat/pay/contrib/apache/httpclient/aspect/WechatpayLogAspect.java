@@ -1,6 +1,7 @@
 package com.wechat.pay.contrib.apache.httpclient.aspect;
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.wechat.pay.contrib.apache.httpclient.WechatpayAPI;
 import com.wechat.pay.contrib.apache.httpclient.WechatpayConfig;
 import com.wechat.pay.contrib.apache.httpclient.domain.dto.WechatpayLogDTO;
@@ -77,7 +78,9 @@ public class WechatpayLogAspect {
             wechatpayLogDTO.setRequestText(requestText);
         }
         Object result = joinPoint.proceed();
-        wechatpayLogDTO.setResponseText(result.toString());
+        wechatpayLogDTO.setResponseCiphertext(result.toString());
+        Object jsonObj = JSON.parse(result.toString());
+        wechatpayLogDTO.setResponseText(JsonUtil.toSnakeJson(jsonObj));
         wechatpayLogDTO.setRequestTime(LocalDateTime.now());
         wechatpayLogDTO.setCostTime(System.currentTimeMillis() - currentTime);
         wechatpayLogDTO.setStatus(YesNo._1.getValue());
